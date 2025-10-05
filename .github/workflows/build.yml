@@ -7,10 +7,24 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Build APK with Buildozer
-      uses: artem-sheremet/buildozer-action@v0.2
+    - name: Set up Python
+      uses: actions/setup-python@v4
       with:
-        buildozer-version: stable
+        python-version: '3.9'
+        
+    - name: Install Buildozer dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y git zip unzip openjdk-8-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
+        
+    - name: Install Buildozer
+      run: |
+        pip install Cython==0.29.33
+        pip install buildozer
+        
+    - name: Build APK
+      run: |
+        buildozer android debug
         
     - name: Upload APK artifact
       uses: actions/upload-artifact@v4
